@@ -1,0 +1,114 @@
+<html>
+
+  <head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet" href="./normalize.css">
+
+
+    <link rel="stylesheet" href="../webtask.css">
+
+
+    <title>GOYA Inquiry page</title>
+
+    <style type="text/css">  </style>
+
+
+
+  </head>
+
+
+  <header class="header clearfix">
+
+
+       <a href="test">
+
+         <img id="glogo" src="./images/web_task.jpg" class="image">
+
+       </a>
+
+     </header>
+
+  <body>
+
+    <h1> <strong> Welcome to GOYA database </strong></h1>
+
+    <% require 'pg' %>
+
+    <% connection = PG::connect(dbname: "goya") %>
+
+    <% connection.internal_encoding = "UTF-8" %>
+
+
+    <form action="indicate.cgi" method="POST">
+
+       Please insert your input <br><br>
+
+      <input type="text"  name="input" ><br>
+
+      <input type="submit" name="Submit" class="send" >
+
+
+    </form>
+
+    <% result = connection.exec("SELECT * FROM crops WHERE quality = 'f';") %>
+
+    <% data = [] %>
+
+    <% result.each do |record| %>
+
+      <%  data << " Length ：#{record["length"]} Weight ：#{record["weight"]}　Quality ：#{record["quality"]}  Self-Consuption：#{record["give_for"]} Date：#{record["date"]}" %>
+
+    <% end %>
+
+
+    <form action="goya.cgi" method="POST">
+
+       Click the button below to get to the poor quality crops' Data <br><br>
+
+
+      <input type="text" name="goya" value="<%= data.join(' ') %>">
+
+      <input type="submit" name="Submit" class="send" >
+
+
+
+    </form>
+
+
+        <% result = connection.exec("SELECT * FROM crops;") %>
+
+        <% data = [] %>
+
+        <% result.each do |record| %>
+
+          <%  data << " Length ：#{record["length"]} Weight ：#{record["weight"]}　Quality ：#{record["quality"]}  Self-Consuption：#{record["give_for"]} Date：#{record["date"]}" %>
+
+        <% end %>
+
+
+        <form action="goya.cgi" method="POST">
+
+           Click the button below to get to Entire GOYA Database Information <br><br>
+
+
+          <input type="text" name="goya" value="<%= data.join(' ') %>">
+
+          <input type="submit" name="Submit" class="send" >
+
+        </form>
+
+
+
+
+
+
+    <footer class="footer">
+          <P> Copyright © 2020 DIVE INC ALL RIGHTS RESERVED.
+          </P>
+        </footer>
+
+  </body>
+
+</html>
